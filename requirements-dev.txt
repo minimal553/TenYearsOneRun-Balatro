@@ -1,0 +1,2 @@
+# Build/reference tests only. The game uses the committed offline Lua table.
+lunar-python==1.4.8 --hash=sha256:3aa11cc73c25e70ddf0ba5bdac7398c03acc9491a3aa512a91c9642973b669d6

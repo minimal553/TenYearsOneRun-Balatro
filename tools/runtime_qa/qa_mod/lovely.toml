@@ -1,0 +1,40 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 1000
+
+[[patches]]
+[patches.copy]
+target = "conf.lua"
+position = "prepend"
+sources = ["bootstrap.lua"]
+
+[[patches]]
+[patches.pattern]
+target = "conf.lua"
+pattern = "t.window.width = 0"
+position = "at"
+payload = "t.window.width = 1280; t.window.x = -32000; t.window.y = -32000; t.window.centered = false"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "conf.lua"
+pattern = "t.window.height = 0"
+position = "at"
+payload = "t.window.height = 800"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "main.lua"
+pattern = "if os == 'OS X' or os == 'Windows'*then"
+position = "at"
+payload = "TYG_RUNTIME_QA.steam_branch_disabled = true\nif false then -- TYG QA ONLY: do not initialize or write Steam account state"
+match_indent = true
+
+[[patches]]
+[patches.copy]
+target = "main.lua"
+position = "append"
+sources = ["cycle.lua", "combo.lua", "presets.lua", "quit_observer.lua", "driver.lua"]

@@ -1,0 +1,13 @@
+{
+  "id": "ten_years_nine_grid",
+  "name": "十年一局：九宫命局",
+  "display_name": "九宫命局",
+  "author": ["ZhuanZ1"],
+  "description": "九宫预设或生日匹配双入口；26种格局小丑、1至2倍目标与九档运签。生日分类仍为实验规则，详见已知问题。",
+  "prefix": "tyg",
+  "main_file": "main.lua",
+  "version": "0.6.0",
+  "priority": 11,
+  "badge_colour": "BC503C",
+  "dependencies": ["Steamodded (>=1.0.0~BETA-1814a)"]
+}

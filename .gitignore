@@ -1,0 +1,23 @@
+# Local user state / proprietary engine output: never publish.
+qa-runs/
+backups/
+release/
+publish-staging/
+node_modules/
+vendor/
+__pycache__/
+*.py[cod]
+*.jkr
+*.log
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.DS_Store
+Thumbs.db
+WORKLOG*.md
+# Machine-specific audit documents remain local.
+docs/superpowers/
+tools/runtime_qa/art_review_20260920.md
+tools/runtime_qa/review_v05_20260920.md

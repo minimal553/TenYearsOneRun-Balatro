@@ -1,0 +1,11 @@
+{
+  "name": "ten-years-one-run-balatro-tools",
+  "version": "0.6.0",
+  "private": true,
+  "description": "Development-only image export and verification; not required by the mod at runtime.",
+  "scripts": {
+    "test:assets": "node tests/test_assets.cjs",
+    "build:assets": "node tools/build_assets.cjs"
+  },
+  "devDependencies": {"sharp": "0.35.4"}
+}

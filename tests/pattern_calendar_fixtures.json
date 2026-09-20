@@ -1,0 +1,32 @@
+{
+  "version": "tyg-patterns-0.5.0",
+  "scope": "Actual calendar witnesses in fixed UTC+08:00. Expected categories are game policy, not historical or scientific labels.",
+  "fixtures": [
+    {"key":"zhengguan","date":"1901-02-22","time":"16:00","chart":["辛丑","庚寅","辛未","丙申"]},
+    {"key":"qisha","date":"1901-01-15","time":"00:00","chart":["庚子","己丑","癸巳","壬子"]},
+    {"key":"zhengcai","date":"1901-02-22","time":"02:00","chart":["辛丑","庚寅","辛未","己丑"]},
+    {"key":"piancai","date":"1901-01-01","time":"00:00","chart":["庚子","戊子","己卯","甲子"]},
+    {"key":"zhengyin","date":"1901-01-22","time":"00:00","chart":["庚子","己丑","庚子","丙子"]},
+    {"key":"pianyin","date":"1901-03-01","time":"08:00","chart":["辛丑","庚寅","戊寅","丙辰"]},
+    {"key":"shishen","date":"1901-04-08","time":"00:00","chart":["辛丑","壬辰","丙辰","戊子"]},
+    {"key":"shangguan","date":"1901-01-08","time":"00:00","chart":["庚子","己丑","丙戌","戊子"]},
+    {"key":"jianlu","date":"1901-02-15","time":"00:00","chart":["辛丑","庚寅","甲子","甲子"]},
+    {"key":"yuejie","date":"1901-05-01","time":"00:00","chart":["辛丑","壬辰","己卯","甲子"]},
+    {"key":"yangren","date":"1902-03-22","time":"00:00","chart":["壬寅","癸卯","甲辰","甲子"]},
+    {"key":"cong_cai","date":"1906-06-08","time":"10:00","chart":["丙午","甲午","癸未","丁巳"]},
+    {"key":"cong_sha","date":"2023-03-22","time":"22:00","chart":["癸卯","乙卯","己卯","乙亥"]},
+    {"key":"cong_er","date":"1914-03-08","time":"06:00","chart":["甲寅","丁卯","癸巳","乙卯"]},
+    {"key":"cong_shi","date":"1902-03-08","time":"00:00","chart":["壬寅","癸卯","庚寅","丙子"]},
+    {"key":"quzhi","date":"1928-03-15","time":"00:00","chart":["戊辰","乙卯","甲寅","甲子"]},
+    {"key":"yanshang","date":"1967-06-22","time":"10:00","chart":["丁未","丙午","丁巳","乙巳"]},
+    {"key":"jiase","date":"1949-04-08","time":"14:00","chart":["己丑","戊辰","戊辰","己未"]},
+    {"key":"congge","date":"1968-10-07","time":"08:00","chart":["戊申","辛酉","庚戌","庚辰"]},
+    {"key":"runxia","date":"1912-12-22","time":"08:00","chart":["壬子","壬子","壬申","甲辰"]},
+    {"key":"hua_tu","date":"1908-07-08","time":"08:00","chart":["戊申","己未","甲子","戊辰"]},
+    {"key":"hua_jin","date":"1908-09-22","time":"18:00","chart":["戊申","辛酉","庚辰","乙酉"]},
+    {"key":"hua_shui","date":"1932-12-01","time":"08:00","chart":["壬申","辛亥","丙申","壬辰"]},
+    {"key":"hua_mu","date":"1903-03-15","time":"14:00","chart":["癸卯","乙卯","壬寅","丁未"]},
+    {"key":"hua_huo","date":"1906-06-08","time":"12:00","chart":["丙午","甲午","癸未","戊午"]},
+    {"key":"changgui","date":"1901-07-22","time":"18:00","chart":["辛丑","乙未","辛丑","丁酉"]}
+  ]
+}

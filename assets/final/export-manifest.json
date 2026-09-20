@@ -1,0 +1,252 @@
+{
+  "source": "built-in ImageGen",
+  "method": "aspect-preserving contain; nearest pixels; standard stepped corner alpha; 2x from1x",
+  "runtime_atlases": [
+    "deck",
+    "fortune",
+    "natal",
+    "patterns",
+    "legacy_booster"
+  ],
+  "natal_order": [
+    "bijie",
+    "guanyin",
+    "shishang",
+    "caixing",
+    "shayin"
+  ],
+  "pattern_order": [
+    "zhengguan",
+    "qisha",
+    "zhengcai",
+    "piancai",
+    "zhengyin",
+    "pianyin",
+    "shishen",
+    "shangguan",
+    "jianlu",
+    "yuejie",
+    "yangren",
+    "cong_cai",
+    "cong_sha",
+    "cong_er",
+    "cong_shi",
+    "quzhi",
+    "yanshang",
+    "jiase",
+    "congge",
+    "runxia",
+    "hua_tu",
+    "hua_jin",
+    "hua_shui",
+    "hua_mu",
+    "hua_huo",
+    "changgui"
+  ],
+  "sources": [
+    {
+      "key": "deck",
+      "source": "mingju-deck-back-v1.png",
+      "width": 1084,
+      "height": 1451
+    },
+    {
+      "key": "fortune",
+      "source": "fortune-v2.png",
+      "width": 1084,
+      "height": 1451
+    },
+    {
+      "key": "legacy_booster",
+      "source": "legacy-booster-v1.png",
+      "width": 1085,
+      "height": 1450
+    },
+    {
+      "key": "bijie",
+      "source": "bijie-v1.png",
+      "width": 1087,
+      "height": 1447
+    },
+    {
+      "key": "guanyin",
+      "source": "guanyin-v1.png",
+      "width": 1087,
+      "height": 1447
+    },
+    {
+      "key": "shishang",
+      "source": "shishang-v1.png",
+      "width": 1064,
+      "height": 1478
+    },
+    {
+      "key": "caixing",
+      "source": "caixing-v1.png",
+      "width": 1084,
+      "height": 1451
+    },
+    {
+      "key": "shayin",
+      "source": "shayin-v2.png",
+      "width": 1068,
+      "height": 1472
+    },
+    {
+      "key": "mp_zhengguan",
+      "source": "mp_zhengguan-v1.png",
+      "width": 1085,
+      "height": 1450
+    },
+    {
+      "key": "mp_qisha",
+      "source": "shayin-v2.png",
+      "width": 1068,
+      "height": 1472
+    },
+    {
+      "key": "mp_zhengcai",
+      "source": "mp_zhengcai-v1.png",
+      "width": 1084,
+      "height": 1451
+    },
+    {
+      "key": "mp_piancai",
+      "source": "mp_piancai-v1.png",
+      "width": 1084,
+      "height": 1451
+    },
+    {
+      "key": "mp_zhengyin",
+      "source": "guanyin-v1.png",
+      "width": 1087,
+      "height": 1447
+    },
+    {
+      "key": "mp_pianyin",
+      "source": "mp_pianyin-v1.png",
+      "width": 1085,
+      "height": 1449
+    },
+    {
+      "key": "mp_shishen",
+      "source": "shishang-v1.png",
+      "width": 1064,
+      "height": 1478
+    },
+    {
+      "key": "mp_shangguan",
+      "source": "mp_shangguan-v1.png",
+      "width": 1084,
+      "height": 1451
+    },
+    {
+      "key": "mp_jianlu",
+      "source": "mp_jianlu-v1.png",
+      "width": 1085,
+      "height": 1450
+    },
+    {
+      "key": "mp_yuejie",
+      "source": "bijie-v1.png",
+      "width": 1087,
+      "height": 1447
+    },
+    {
+      "key": "mp_yangren",
+      "source": "mp_yangren-v1.png",
+      "width": 1083,
+      "height": 1452
+    },
+    {
+      "key": "mp_cong_cai",
+      "source": "caixing-v1.png",
+      "width": 1084,
+      "height": 1451
+    },
+    {
+      "key": "mp_cong_sha",
+      "source": "mp_cong_sha-v1.png",
+      "width": 1084,
+      "height": 1451
+    },
+    {
+      "key": "mp_cong_er",
+      "source": "mp_cong_er-v1.png",
+      "width": 1085,
+      "height": 1450
+    },
+    {
+      "key": "mp_cong_shi",
+      "source": "mp_cong_shi-v1.png",
+      "width": 1085,
+      "height": 1450
+    },
+    {
+      "key": "mp_quzhi",
+      "source": "mp_quzhi-v1.png",
+      "width": 1086,
+      "height": 1449
+    },
+    {
+      "key": "mp_yanshang",
+      "source": "mp_yanshang-v1.png",
+      "width": 1085,
+      "height": 1450
+    },
+    {
+      "key": "mp_jiase",
+      "source": "mp_jiase-v1.png",
+      "width": 1083,
+      "height": 1452
+    },
+    {
+      "key": "mp_congge",
+      "source": "mp_congge-v1.png",
+      "width": 1084,
+      "height": 1451
+    },
+    {
+      "key": "mp_runxia",
+      "source": "mp_runxia-v1.png",
+      "width": 1083,
+      "height": 1452
+    },
+    {
+      "key": "mp_hua_tu",
+      "source": "mp_hua_tu-v1.png",
+      "width": 1084,
+      "height": 1451
+    },
+    {
+      "key": "mp_hua_jin",
+      "source": "mp_hua_jin-v1.png",
+      "width": 1084,
+      "height": 1451
+    },
+    {
+      "key": "mp_hua_shui",
+      "source": "mp_hua_shui-v1.png",
+      "width": 1083,
+      "height": 1452
+    },
+    {
+      "key": "mp_hua_mu",
+      "source": "mp_hua_mu-v1.png",
+      "width": 1084,
+      "height": 1451
+    },
+    {
+      "key": "mp_hua_huo",
+      "source": "mp_hua_huo-v1.png",
+      "width": 1084,
+      "height": 1451
+    },
+    {
+      "key": "mp_changgui",
+      "source": "mp_changgui-v1.png",
+      "width": 1085,
+      "height": 1450
+    }
+  ]
+}

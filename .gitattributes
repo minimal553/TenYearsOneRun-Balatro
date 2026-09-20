@@ -1,0 +1,15 @@
+* text=auto
+*.lua text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.ps1 text eol=lf
+*.cjs text eol=lf
+*.png binary
+*.txt text eol=lf
+*.sha256 text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+# Preserve the exact native-tested runtime bytes, including existing line endings.
+mod/TenYearsNineGrid/** -text
