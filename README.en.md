@@ -1,6 +1,6 @@
-# Ten Years, One Run · Your Birth Chart in Balatro
+# Ten Years, One Run: Fate at the Card Table | Bazi × Balatro
 
-### BAZI × BALATRO — PLAY THROUGH THE TURNS OF FATE
+### Bazi-inspired fate, played one decade at a time
 
 **You cannot choose your birthday. You can choose your next play.**
 
