@@ -1,6 +1,6 @@
 {
   "name": "ten-years-one-run-balatro-tools",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "description": "Development-only image export and verification; not required by the mod at runtime.",
   "scripts": {

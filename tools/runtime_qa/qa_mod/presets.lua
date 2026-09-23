@@ -2,7 +2,7 @@
 local function preset_scenario(rank)
  return function(qa,note,capture,finish,native_blind_amount)
   local step='start';local at=love.timer.getTime();local C,I,P;local preview=1
-  local classifications=0;local hand_before,playing_before;local drained
+  local classifications=0;local hand_before,playing_before;local drained,legendary_key,high_card_level
   local function advance(s)step=s;at=love.timer.getTime();note('preset_'..s)end
   local function ready()return C and C.idle()and not G.CONTROLLER.lock_input end
   local function button(node,key)
@@ -74,20 +74,32 @@ local function preset_scenario(rank)
     local ticket=assert(fortune('ante_1'));assert(ticket:can_use_consumeable(),'preset fortune cannot be used')
     G.FUNCS.use_card{config={ref_table=ticket}};advance('reward')
    elseif step=='reward'and ready()and #C.active().pending_effects==0 then
-    drained=drained or love.timer.getTime();if love.timer.getTime()-drained<.4 then return end
+    drained=drained or love.timer.getTime();if love.timer.getTime()-drained<1.5 then return end
     assert(not G.booster_pack and G.STATE==G.STATES.SELECTING_HAND,'preset reward opened wrong UI')
     if rank==1 then
-     assert(#G.consumeables.cards==2,'best preset must create2Tarot')
-     for _,card in ipairs(G.consumeables.cards)do assert(card.ability.set=='Tarot','reward was not Tarot')end
-     assert(#G.hand.cards==hand_before and #G.playing_cards==playing_before,'Tarot reward changed deck')
+     assert(#G.consumeables.cards==1 and G.consumeables.cards[1].config.center.key=='c_soul','best preset must give original Soul')
     else
-     assert(#G.consumeables.cards==0 and #G.hand.cards==hand_before+1 and #G.playing_cards==playing_before+1,
-      'stone reward did not join permanent deck and current hand')
-     local stones=0;for _,card in ipairs(G.hand.cards)do if card.config.center.key=='m_stone'then stones=stones+1 end end
-     assert(stones==1,'stone reward not present')
+     assert(#G.consumeables.cards==1 and G.consumeables.cards[1].config.center.key=='c_pluto','last preset must give Pluto')
     end
+    assert(#G.hand.cards==hand_before and #G.playing_cards==playing_before,'consumable delivery must not alter playing cards')
     note('preset_reward_verified',qa.preset)
-    capture('runtime-qa-preset-reward.png',function()ease_ante(1);advance('ante')end);advance('capture_reward')
+    capture('runtime-qa-preset-reward.png',function()
+     local card=G.consumeables.cards[1];assert(card:can_use_consumeable(),'native Soul/Pluto not usable')
+     high_card_level=G.GAME.hands['High Card'].level
+     G.FUNCS.use_card{config={ref_table=card}};advance(rank==1 and'soul'or'planet')
+    end);advance('capture_reward')
+   elseif step=='soul'and ready()then
+    assert(#G.consumeables.cards==0 and #G.jokers.cards==2,'Soul did not consume itself and create exactly1Joker')
+    local legendary=G.jokers.cards[2]
+    assert(legendary.config.center.rarity==4,'Soul generated a non-Legendary Joker')
+    legendary_key=legendary.config.center.key;qa.soul_legendary=legendary_key
+    note('original_soul_created_legendary',{key=legendary_key,rarity=4})
+    capture('runtime-qa-soul-legendary.png',function()ease_ante(1);advance('ante')end);advance('capture_soul')
+   elseif step=='planet'and ready()then
+    assert(#G.consumeables.cards==0 and G.GAME.hands['High Card'].level==high_card_level+1,'Pluto did not upgrade High Card')
+    high_card_level=G.GAME.hands['High Card'].level;qa.pluto_level=high_card_level
+    note('original_pluto_used',{high_card_level=high_card_level})
+    ease_ante(1);advance('ante')
    elseif step=='ante'and ready()and C.active().current_ante==2 then
     assert(C.phase(C.active(),2).rank==rank,'next preset stage changed difficulty')
     assert(C.active().seen_antes.ante_2,'next stage fortune was not tracked')
@@ -115,7 +127,8 @@ local function preset_scenario(rank)
     assert(r.mode=='preset'and r.preset_id==P.catalog[rank].id,'serialized preset missing')
     qa.expected_reload={ante=2,natal_key=r.natal_key,pattern_key='changgui',mode='preset',
      preset_id=r.preset_id,rank=rank,hand_count=#G.hand.cards,playing_count=#G.playing_cards,
-     consumeable_count=#G.consumeables.cards,claim1_used=true}
+     consumeable_count=#G.consumeables.cards,claim1_used=true,reward_version=2,
+     joker_count=#G.jokers.cards,legendary_key=legendary_key,high_card_level=rank==9 and high_card_level or nil}
     love.filesystem.write('runtime-qa-reload-expected.json',JSON.encode(qa.expected_reload))
     capture('runtime-qa-preset-saved.png',finish);advance('capture_save')
    end
@@ -124,3 +137,29 @@ local function preset_scenario(rank)
 end
 TYG_QA_SCENARIOS.preset1=preset_scenario(1)
 TYG_QA_SCENARIOS.preset9=preset_scenario(9)
+
+-- Continue a recorded0.6synthetic save, then actually use its old rank9ticket.
+-- This validates the old promise, not just that its snapshot loads.
+function TYG_QA_SCENARIOS.legacy9(qa,note,capture,finish)
+ local loaded=false;local requested=false;local before_hand,before_playing;local done=false
+ local resume=TYG_QA_SCENARIOS.reload(qa,note,capture,function()loaded=true end)
+ return function()
+  if not loaded then resume();return end
+  local C=SMODS.Mods.ten_years_nine_grid.tyg_cycles
+  if done or not C.idle()then return end
+  if not requested then
+   local r=C.active();assert(not r.reward_version or r.reward_version==1,'old save unexpectedly adopted new table')
+   local ticket
+   for _,card in ipairs(G.consumeables.cards)do if card.config.center.key=='c_tyg_fortune_9'then ticket=card end end
+   assert(ticket and ticket:can_use_consumeable(),'old rank9ticket missing/unusable')
+   before_hand=#G.hand.cards;before_playing=#G.playing_cards;requested=true
+   G.FUNCS.use_card{config={ref_table=ticket}};return
+  end
+  if #C.active().pending_effects>0 then return end
+  assert(#G.hand.cards==before_hand+1 and #G.playing_cards==before_playing+1,'old rank9promise changed instead of adding stone')
+  assert(#G.consumeables.cards==0,'old rank9became a new Pluto consumable')
+  local added=G.playing_cards[#G.playing_cards];assert(added.config.center.key=='m_stone','old enhancement not preserved')
+  note('legacy_rank9_stone_preserved',{playing=#G.playing_cards,hand=#G.hand.cards,enhancement=added.config.center.key})
+  done=true;capture('runtime-qa-legacy-reward.png',finish)
+ end
+end

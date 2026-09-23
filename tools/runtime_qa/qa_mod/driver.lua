@@ -52,6 +52,21 @@ function love.load(...)
  assert(qa.steam_branch_disabled and not qa.steam_require_attempted,'QA Steam branch patch did not apply')
  assert(not G.STEAM,'QA Steam isolation failed')
  assert(not package.loaded.luasteam,'QA loaded the Steam native integration unexpectedly')
+ -- Observe only this mod's save requests. Never change the native save/state.
+ local native_save=save_run
+ save_run=function(...)
+  local caller=debug.getinfo(2,'S')
+  if caller and caller.source:lower():find('cycles.lua',1,true)then
+   local cycle=SMODS.Mods.ten_years_nine_grid.tyg_cycles
+   qa.cycle_save_count=(qa.cycle_save_count or 0)+1
+   if not cycle.idle()then
+    qa.unsafe_cycle_save=true
+    error('Cycle attempted to persist an unstable native state '..tostring(G.STATE))
+   end
+   note('cycle_save_stable',{state=G.STATE,ordinal=qa.cycle_save_count})
+  end
+  return native_save(...)
+ end
  love.window.setTitle('TenYearsNineGrid QA '..qa.run)
  love.window.setPosition(-32000,-32000)
  qa.love_version=love._version;qa.game_version=G.VERSION;qa.steamodded_version=SMODS.version

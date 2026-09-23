@@ -49,7 +49,7 @@ function TYG_QA_SCENARIOS.cycle(qa,note,capture,finish,native_blind_amount)
   fixture_card=SMODS.add_card{key='c_tyg_fortune_'..fixture_rank,area=G.consumeables,no_edition=true}
   fixture_card.ability.tyg_claim_id='qa_fixture_rank_'..fixture_rank
   rank1_blocker=nil;rank1_queue_seen=false;fixture_drained_at=nil
-  if fixture_rank==1 then
+  if fixture_rank==4 then
    rank1_blocker=SMODS.add_card{set='Planet',key=cycle.active().route.planet_key,area=G.consumeables,no_edition=true}
   end
   local set={};for _,card in ipairs(G.playing_cards)do set[card]=true end
@@ -163,10 +163,11 @@ function TYG_QA_SCENARIOS.cycle(qa,note,capture,finish,native_blind_amount)
    assert(not G.booster_pack and G.STATE==G.STATES.SELECTING_HAND,'fortune opened a booster or lost state')
    identity(G.hand,original_hand,'hand');identity(G.deck,original_deck,'deck')
    assert(r.used_claims.ante_1,'fortune claim was not persisted')
-   assert(#G.consumeables.cards==2,'rank two must give exactly two consumables')
+   assert(#G.consumeables.cards==1,'rank two must give exactly one Spectral')
    local sets={};for _,card in ipairs(G.consumeables.cards)do sets[card.ability.set]=(sets[card.ability.set]or 0)+1 end
-   assert(sets.Tarot==1 and sets.Planet==1,'rank two must give Tarot plus recommended Planet')
-   note('native_fortune_verified',{hand=#G.hand.cards,tarot=sets.Tarot,planet=sets.Planet})
+   assert(sets.Spectral==1 and G.consumeables.cards[1].config.center.key~='c_soul'
+    and G.consumeables.cards[1].config.center.key~='c_black_hole','rank two must give an ordinary Spectral')
+   note('native_fortune_verified',{hand=#G.hand.cards,spectral=sets.Spectral,key=G.consumeables.cards[1].config.center.key})
    advance('reward_settle')
   elseif step=='reward_settle'and ready()and love.timer.getTime()-at>1 then
    capture('runtime-qa-fortune-used.png',function()
@@ -191,7 +192,11 @@ function TYG_QA_SCENARIOS.cycle(qa,note,capture,finish,native_blind_amount)
     hand=#G.hand.cards,deck=#G.deck.cards,natal_triggers=natal_triggers-hand_play_before.triggers})
    advance('native_hand_settle')
   elseif step=='native_hand_settle'and ready()and love.timer.getTime()-at>1 then
-   capture('runtime-qa-native-hand-played.png',function()ease_ante(1);advance('ante')end)
+   capture('runtime-qa-native-hand-played.png',function()
+    SMODS.add_card{set='Planet',key='c_pluto',area=G.consumeables,no_edition=true}
+    note('qa_inventory_blocker_added',{purpose='exercise full-slot next-stage queue'})
+    ease_ante(1);advance('ante')
+   end)
    advance('capture_native_hand')
   elseif step=='ante'and ready()and cycle.active().current_ante==2 then
    local r=cycle.active();local phase=cycle.phase(r,2)
@@ -213,9 +218,9 @@ function TYG_QA_SCENARIOS.cycle(qa,note,capture,finish,native_blind_amount)
    local r=cycle.active()
    assert(#G.consumeables.cards<=G.consumeables.config.card_limit,'fortune overflowed consumable capacity')
    assert(not G.booster_pack and G.STATE==G.STATES.SELECTING_HAND,'fixture fortune opened a pack/lost hand state')
-   if fixture_rank==1 and not rank1_queue_seen then
+   if fixture_rank==4 and not rank1_queue_seen then
     assert(#r.pending_effects==1 and #G.consumeables.cards==2,'second Tarot must wait behind full slots')
-    rank1_queue_seen=true;note('rank1_second_tarot_queued',{pending=1,inventory=2})
+    rank1_queue_seen=true;note('rank4_second_tarot_queued',{pending=1,inventory=2})
     G.FUNCS.sell_card{config={ref_table=rank1_blocker}};return
    end
    if #r.pending_effects>0 then return end
@@ -224,37 +229,51 @@ function TYG_QA_SCENARIOS.cycle(qa,note,capture,finish,native_blind_amount)
    fixture_drained_at=fixture_drained_at or love.timer.getTime()
    if love.timer.getTime()-fixture_drained_at<.3 then return end
    local sets={};for _,card in ipairs(G.consumeables.cards)do sets[card.ability.set]=(sets[card.ability.set]or 0)+1 end
-   local expected_tarot=({[1]=2,[2]=1,[4]=1})[fixture_rank]or 0
-   local expected_planet=({[2]=1,[3]=2,[5]=1})[fixture_rank]or 0
-   assert((sets.Tarot or 0)==expected_tarot and(sets.Planet or 0)==expected_planet,
-    'native fortune output mismatch for rank '..fixture_rank)
-   assert(#G.consumeables.cards==expected_tarot+expected_planet,'unexpected reward type')
-   if fixture_rank==6 or fixture_rank==7 then
-    assert(G.GAME.dollars==fixture_before.dollars+(fixture_rank==6 and 3 or 1),'money reward mismatch')
+   if fixture_rank<=3 then
+    assert(#G.consumeables.cards==1 and sets.Spectral==1,'Spectral reward missing')
+    local key=G.consumeables.cards[1].config.center.key
+    if fixture_rank==1 then assert(key=='c_soul','best reward must be original Soul')
+    else assert(key~='c_soul'and key~='c_black_hole','ordinary Spectral must not be hidden rare card')end
+   elseif fixture_rank==4 or fixture_rank==5 then
+    assert(#G.consumeables.cards==2 and sets.Tarot==2,'two-Tarot reward mismatch')
+   elseif fixture_rank==6 then
+    assert(#G.consumeables.cards==0,'enhanced cards are not consumables')
+   elseif fixture_rank==7 or fixture_rank==8 then
+    assert(#G.consumeables.cards==1 and(sets.Tarot==1 or sets.Planet==1),'lower reward must be one Tarot or Planet')
+   else
+    assert(#G.consumeables.cards==1 and G.consumeables.cards[1].config.center.key=='c_pluto','last reward must be Pluto')
    end
-   if fixture_rank<8 then
+   if fixture_rank~=6 then
     identity(G.hand,fixture_before.hand,'fixture hand');identity(G.deck,fixture_before.deck,'fixture deck')
    else
-    assert(#G.playing_cards==fixture_before.playing+1,'reward not added to permanent playing cards')
-    assert(#G.hand.cards==#fixture_before.hand+1,'in-blind generated card did not join current hand')
-    assert(G.deck.config.card_limit==fixture_before.capacity+1,'permanent deck capacity did not increase')
-    assert(playing_contexts==fixture_before.contexts+1,'playing_card_added must trigger exactly once')
-    local added;for _,card in ipairs(G.playing_cards)do if not fixture_before.playing_set[card]then added=card end end
-    assert(added and added.config.center.key==(fixture_rank==9 and'm_stone'or'c_base'),'playing enhancement mismatch')
+    assert(#G.playing_cards==fixture_before.playing+2,'pair not added to permanent playing cards')
+    assert(#G.hand.cards==#fixture_before.hand+2,'generated pair did not join current hand')
+    assert(G.deck.config.card_limit==fixture_before.capacity+2,'permanent capacity did not increase by2')
+    assert(playing_contexts==fixture_before.contexts+2,'playing_card_added must trigger twice')
+    local added={};for _,card in ipairs(G.playing_cards)do if not fixture_before.playing_set[card]then added[#added+1]=card end end
+    local key=added[1]and added[1].config.center.key
+    assert(#added==2 and(key=='m_mult'or key=='m_bonus')and added[2].config.center.key==key,'mixed/wrong enhanced pair')
+    qa.actual_pair=key
    end
    assert(not cycle.queue_effect(fixture_rank,fixture_card),'used or copied fixture repeated its reward')
-   note('native_fixture_verified',{rank=fixture_rank,tarot=expected_tarot,planet=expected_planet,
+   local keys={};for _,card in ipairs(G.consumeables.cards)do keys[#keys+1]=card.config.center.key end
+   note('native_fixture_verified',{rank=fixture_rank,sets=sets,keys=keys,pair=fixture_rank==6 and qa.actual_pair or nil,
     hand=#G.hand.cards,permanent_cards=#G.playing_cards,booster=false})
-   if fixture_rank==1 then advance('rank1_screenshot')else next_fixture()end
+   if fixture_rank==4 then advance('rank1_screenshot')else next_fixture()end
   elseif step=='rank1_screenshot'and ready()and love.timer.getTime()-at>1 then
-   capture('runtime-qa-rank1-two-tarots.png',next_fixture);advance('capture_rank1')
+   capture('runtime-qa-rank4-two-tarots.png',next_fixture);advance('capture_rank1')
   elseif step=='save'and ready()then
    local data=get_compressed(G.SETTINGS.profile..'/save.jkr')
    if not data then return end
    local saved=STR_UNPACK(data);local r=saved.GAME and saved.GAME.tyg_cycle
    if not r or r.current_ante~=2 or #saved.cardAreas.hand.cards~=#G.hand.cards then return end
+   if #r.pending_items~=0 or #r.pending_effects~=0 then return end
+   local stored=saved.cardAreas.consumeables.cards
+   if #stored~=#G.consumeables.cards then return end
+   for i,card in ipairs(G.consumeables.cards)do if stored[i].save_fields.center~=card.config.center.key then return end end
+   for i=1,9 do if not r.used_claims['qa_fixture_rank_'..i]then return end end
    qa.expected_reload={ante=2,natal_key=r.natal_key,pattern_key=r.pattern.key,combo_key=r.pattern.combo and r.pattern.combo.key,hand_count=#G.hand.cards,
-    playing_count=#G.playing_cards,consumeable_count=#G.consumeables.cards,claim1_used=true}
+    playing_count=#G.playing_cards,consumeable_count=#G.consumeables.cards,claim1_used=true,reward_version=2}
    love.filesystem.write('runtime-qa-reload-expected.json',JSON.encode(qa.expected_reload))
    capture('runtime-qa-cycle-saved.png',finish);advance('capture_save')
   end
@@ -297,13 +316,18 @@ function TYG_QA_SCENARIOS.reload(qa,note,capture,finish)
   end
   assert(not G.OVERLAY_MENU,'continue unexpectedly asked for birthday')
   assert(r.current_ante==expected.ante and r.natal_key==expected.natal_key,'cycle identity changed on reload')
+  if expected.reward_version then assert(r.reward_version==expected.reward_version,'reward version changed on reload')end
   if expected.mode then assert(r.mode==expected.mode,'entry mode lost on reload')end
   if expected.preset_id then
    assert(r.preset_id==expected.preset_id,'preset identity lost on reload')
    for ante=1,9 do assert(cycle.phase(r,ante).rank==expected.rank,'fixed preset tiers changed on reload')end
   end
   assert((not not r.used_claims.ante_1)==expected.claim1_used,'fortune claim status changed on reload')
-   assert(#G.jokers.cards==1 and G.jokers.cards[1].config.center.key==r.natal_key,'natal Joker duplicated on reload')
+   assert(#G.jokers.cards==(expected.joker_count or 1)and G.jokers.cards[1].config.center.key==r.natal_key,'natal Joker duplicated on reload')
+   if expected.legendary_key then
+    assert(G.jokers.cards[2].config.center.key==expected.legendary_key and G.jokers.cards[2].config.center.rarity==4,'Soul legendary lost on reload')
+   end
+   if expected.high_card_level then assert(G.GAME.hands['High Card'].level==expected.high_card_level,'Pluto level lost on reload')end
    if expected.pattern_key then
     assert(r.pattern and r.pattern.key==expected.pattern_key,'saved pattern changed on reload')
     assert(G.jokers.cards[1].ability.tyg_pattern_key==expected.pattern_key,'card pattern identity lost')

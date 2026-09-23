@@ -68,4 +68,4 @@ mod.config_tab=function()
   line('游戏适配度模型，不是现实人生预测。',.26)
  }}
 end
-sendInfoMessage('Nine fixed presets and birthday chart matching registered (0.6.0)','TenYearsNineGrid')
+sendInfoMessage('Nine presets and birthday matching with versioned Soul/Spectral rewards registered (0.7.0)','TenYearsNineGrid')

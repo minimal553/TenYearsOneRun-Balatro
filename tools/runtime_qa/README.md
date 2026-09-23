@@ -44,15 +44,15 @@ exits. It selects the birthday route and types synthetic `20050412` / `030` thro
 helpers, changes the preview to decade six, starts through production callbacks,
 and verifies the saved run nevertheless starts at decade one. It selects the
 native small blind, uses the rank-two fortune through `G.FUNCS.use_card`, and
-checks Tarot + recommended Planet, no booster, unchanged hand and deck identity.
+checks one ordinary Spectral, no booster, unchanged hand and deck identity.
 Real `ease_ante(1)` tests target scaling, a full consumable inventory tests pending
 fortune delivery, and native selling frees one slot. All nine fortunes are then
 granted explicitly as QA fixtures with `qa_fixture_rank_N` claim IDs, and used
 through native `G.FUNCS.use_card`. These are distinguished from normal per-ante
-grants. Rank one starts with another inventory card, forcing the second Tarot to
-queue until the blocker is natively sold. Rank-eight/nine playing rewards verify
-actual hand, permanent playing-card list, deck capacity and exactly one
-`playing_card_added` context. A normal non-face card is played through native
+grants. Rank four starts with another inventory card, forcing the second Tarot to
+queue until the blocker is natively sold. Rank-six enhanced playing rewards verify
+actual hand, permanent playing-card list, deck capacity and exactly two
+`playing_card_added` contexts. A normal non-face card is played through native
 highlight/play functions: the natal Joker's unaltered scoring result is observed,
 one hand is spent, chips increase, and the draw phase refills one card. The actual
 blind threshold must equal its displayed integer. The save worker must write the expected run
@@ -82,7 +82,7 @@ Back atlas, and actual GPU texture identity on every playing-card back, as well 
 the saved gameplay state. A populated atlas registry alone is not acceptance.
 
 The authorized previous-version fixture syntax is `v0.4-dev:<owned-qa-run-id>`
-or `v0.5-dev:<owned-qa-run-id>`.
+or `v0.5-dev:<owned-qa-run-id>` or `v0.6-dev:<owned-qa-run-id>`.
 It resolves only inside that sibling development project's recorded `qa-runs/`;
 it is not an arbitrary file/path option. Resume also observes the classifier and
 requires zero new classifications of saved patterns.
@@ -112,6 +112,14 @@ No private saved birth information is read or copied. Tests use fresh profiles.
 preview choices, then start the selected best/worst fixed challenge. They verify
 the real General Pattern starter, actual blind threshold and fortune use,
 advance one ante through the native function, save and restart in an independent
-owned process. The classifier must never be called for a preset, and saved
+owned process. Version0.7also actually uses the original Soul to create a
+Legendary in preset1, and actually uses Pluto to upgrade High Card in preset9.
+The classifier must never be called for a preset, and saved
 `mode`/`preset_id` plus all8fixed-stage grades must survive reload. The explicit
 ante transition is a lifecycle fixture, not a claim that all8antes were beaten.
+
+`legacy9` restores an owned0.6preset9fixture and actually uses its saved old
+rank9ticket: it must still add a stone playing card, not the new Pluto reward.
+The driver observes save requests originating from `cycles.lua` and rejects any
+request during a non-idle state, including the transient PLAY_TAROT animation.
+This observation does not alter saves, state or the original callback behavior.

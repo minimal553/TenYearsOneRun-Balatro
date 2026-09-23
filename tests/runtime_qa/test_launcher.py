@@ -22,6 +22,8 @@ class LauncherSafetyTests(unittest.TestCase):
                          (ROOT.parent / 'v0.4-dev/qa-runs').resolve())
         self.assertEqual(qa.resolve_seed_run(ROOT, 'v0.5-dev:known-qa').parent,
                          (ROOT.parent / 'v0.5-dev/qa-runs').resolve())
+        self.assertEqual(qa.resolve_seed_run(ROOT, 'v0.6-dev:known-qa').parent,
+                         (ROOT.parent / 'v0.6-dev/qa-runs').resolve())
         for token in ('v0.4-dev:../../Balatro', 'v0.3-dev:unknown', 'C:\\saves', '../old'):
             with self.subTest(token=token), self.assertRaises(ValueError):
                 qa.resolve_seed_run(ROOT, token)

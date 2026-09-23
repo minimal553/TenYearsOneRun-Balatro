@@ -20,13 +20,14 @@ $packageReadme = (Get-Content -LiteralPath (Join-Path $projectRoot 'README.md') 
 Copy-Item -LiteralPath (Join-Path $projectRoot 'KNOWN-ISSUES.md') -Destination (Join-Path $stageRoot 'KNOWN-ISSUES.md')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'VERIFICATION.md') -Destination (Join-Path $stageRoot 'VERIFICATION.md')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'CHANGELOG.md') -Destination (Join-Path $stageRoot 'CHANGELOG.md')
+Copy-Item -LiteralPath (Join-Path $projectRoot 'README.en.md') -Destination (Join-Path $stageRoot 'README.en.md')
 $stageDocs = Join-Path $stageRoot 'docs'
 New-Item -ItemType Directory -Path $stageDocs -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $projectRoot 'docs\PATTERN-RULES.md') -Destination $stageDocs
 foreach ($doc in @('ASSETS.md','DEVELOPMENT.md','runtime-files.sha256','images')) {
     Copy-Item -LiteralPath (Join-Path (Join-Path $projectRoot 'docs') $doc) -Destination (Join-Path $stageDocs $doc) -Recurse
 }
-Compress-Archive -LiteralPath $stageMod,(Join-Path $stageRoot 'README.md'),(Join-Path $stageRoot 'KNOWN-ISSUES.md'),(Join-Path $stageRoot 'VERIFICATION.md'),(Join-Path $stageRoot 'CHANGELOG.md'),$stageDocs -DestinationPath $zipPath
+Compress-Archive -LiteralPath $stageMod,(Join-Path $stageRoot 'README.md'),(Join-Path $stageRoot 'README.en.md'),(Join-Path $stageRoot 'KNOWN-ISSUES.md'),(Join-Path $stageRoot 'VERIFICATION.md'),(Join-Path $stageRoot 'CHANGELOG.md'),$stageDocs -DestinationPath $zipPath
 $verifyRoot = Join-Path $releaseRoot ('verify-' + $buildId)
 Expand-Archive -LiteralPath $zipPath -DestinationPath $verifyRoot
 $verifiedMod = Join-Path $verifyRoot 'TenYearsNineGrid'
@@ -39,7 +40,7 @@ if ((Get-ChildItem -LiteralPath $verifiedMod -File -Recurse).Count -ne $runtimeF
 $previousTarget = $env:TYG_TEST_MOD_DIR
 try {
     $env:TYG_TEST_MOD_DIR = $verifiedMod
-    foreach ($test in @('test_birth_ui.lua','test_presets.lua','test_matching.lua','test_mod.lua','test_cycles.lua','test_natal_fortunes.lua','test_resume.lua','test_patterns.lua','test_pattern_jokers.lua','test_pattern_start.lua')) {
+    foreach ($test in @('test_birth_ui.lua','test_presets.lua','test_matching.lua','test_mod.lua','test_cycles.lua','test_natal_fortunes.lua','test_reward_versions.lua','test_resume.lua','test_patterns.lua','test_pattern_jokers.lua','test_pattern_start.lua')) {
         & python -S (Join-Path $projectRoot 'tests\run_lua_tests.py') $test
         if ($LASTEXITCODE -ne 0) { throw "Extracted-package test failed: $test" }
     }

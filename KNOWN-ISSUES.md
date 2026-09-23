@@ -4,9 +4,9 @@
 
 生日匹配中的官印组合规则目前只接受正印，并同时要求官印满足固定藏根/权重门槛、月令主类已是正官。它可能遗漏偏印参与或其他月令下可见的官生印、印生身关系。
 
-这属于规则模型限制，不是输入控件失效。检测关系是否存在、评价其力量、判断是否成格应当分层；不能靠特判某个生日来修正。0.6新增预设入口没有修改这一算法。预设模式不调用排盘与分类器，可用于直接选择游戏难度。
+这属于规则模型限制，不是输入控件失效。检测关系是否存在、评价其力量、判断是否成格应当分层；不能靠特判某个生日来修正。0.6新增预设入口、0.7调整奖励表，均未修改这一算法。预设模式不调用排盘与分类器，可用于直接选择游戏难度。
 
-The birthday classifier can miss officer-resource relationships because it requires the direct-resource subtype, fixed root/weight thresholds, and a restrictive month-led primary category. This remains unresolved. Recognizing a relationship and evaluating its strength/formation must be treated separately. Version0.6 changes entry modes, not these classification rules.
+The birthday classifier can miss officer-resource relationships because it requires the direct-resource subtype, fixed root/weight thresholds, and a restrictive month-led primary category. This remains unresolved. Recognizing a relationship and evaluating its strength/formation must be treated separately. Versions0.6/0.7 change entry modes and rewards, not these classification rules.
 
 ## Verification is not semantic accuracy / 验收边界
 

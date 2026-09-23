@@ -14,6 +14,9 @@ eq(C.grid(3,3).target_multiplier*600,1200,'worst baseline1200')
 local p=R.demo_profile();p.decades={}
 for i=1,8 do p.decades[i]={index=i,gan_zhi='甲子',start_date='2000-01-01',end_date='2010-01-01',luck_tier=(i-1)%3+1}end
 local s=C.prepare_run(p)
+eq(s.reward_version,2,'new runs use requested reward table')
+-- Exercise the unchanged v0.6 matrix as an unversioned saved run.
+s.reward_version=nil
 eq(s.natal_key,'j_tyg_shishang','birth archetype determines unique starter')
 eq(s.pattern_name,'食伤生财','recognizable pattern name')
 eq(#s.decades,8,'eight actual decades');eq(C.phase(s,2).rank,2,'advance fortune with ante')
@@ -69,7 +72,7 @@ G.GAME.tyg_cycle=nil;eq(get_blind_amount(3),600,'other decks/legacy unaffected')
 blind:set_blind(506.25);eq(blind.chips,506.25,'other decks retain their native threshold behavior')
 local expected_counts={2,2,2,1,1,0,0,0,0}
 for rank=1,9 do
- local run=C.prepare_run(p);run.natal_given=true;run.seen_antes.ante_1=true
+ local run=C.prepare_run(p);run.reward_version=nil;run.natal_given=true;run.seen_antes.ante_1=true
  G.GAME.tyg_cycle=run;G.GAME.round_resets.ante=1;G.STATE=G.STATES.SELECTING_HAND
  G.consumeables=area(2);G.hand=area(8)
  local ticket={ability={tyg_claim_id='ante_1'}}

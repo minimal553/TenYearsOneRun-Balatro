@@ -41,4 +41,19 @@ for i=1,9 do
  local card={ability={}};ok(f.can_use(f,card),'usable item')
  f.use(f,card);eq(requested,i,'honest effect rank');ok(not f.can_use(f,card),'same item not twice')
 end
+ok(type(items.fortune_1.loc_vars)=='function','fortune description resolves actual ticket version')
+local old={ability={tyg_reward_version=1}}
+local new={ability={tyg_reward_version=2}}
+G.GAME.tyg_cycle={reward_version=2}
+eq(items.fortune_1.loc_vars(items.fortune_1,{},old).vars[1],'生成2张随机塔罗牌','old ticket retains v0.6 description inside new run')
+eq(items.fortune_1.loc_vars(items.fortune_1,{},new).vars[1],'生成1张灵魂牌','new ticket promises the native Soul consumable')
+G.GAME.tyg_cycle={}
+eq(items.fortune_6.loc_vars(items.fortune_6,{},{ability={}}).vars[1],'获得$3','unversioned old ticket inherits legacy run')
+local playing=items.fortune_6.loc_vars(items.fortune_6,{},new).vars
+ok(playing[1]:find('50%%')and playing[1]:find('2张倍率牌')and playing[1]:find('2张奖励牌'),'new pair tooltip explains both equal-chance branches')
+ok(playing[2]:find('手牌'),'enhanced pair tooltip explains battle destination')
+local old_stone=items.fortune_9.loc_vars(items.fortune_9,{},old).vars
+eq(old_stone[1],'加入1张石头牌','old lowest ticket still promises stone')
+ok(old_stone[2]:find('手牌'),'old stone keeps its playing-card delivery note')
+ok(items.fortune_9.loc_vars(items.fortune_9,{},new).vars[2]:find('空位'),'new Pluto uses consumable capacity note')
 print('PASS '..n..' natal Joker / fortune definitions assertions')

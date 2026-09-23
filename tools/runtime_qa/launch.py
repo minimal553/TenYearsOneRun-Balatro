@@ -51,7 +51,7 @@ def create_run(project, name):
 def resolve_seed_run(project, token):
     # Only the explicitly authorized previous development project's own QA
     # fixtures may cross the project boundary. Never accepts a save-file path.
-    for previous in ('v0.4-dev', 'v0.5-dev'):
+    for previous in ('v0.4-dev', 'v0.5-dev', 'v0.6-dev'):
         if token.startswith(previous + ':'):
             return resolve_run(project.resolve().parent / previous, token.split(':', 1)[1])
     return resolve_run(project, token)
@@ -121,7 +121,7 @@ def run_probe(game, smods, mod, name, scenario, timeout, extra_mods=(), seed_qa_
     (run / 'localdata').mkdir()
     (run / 'Mods').mkdir()
     if seed_qa_run:
-        if scenario != 'reload':
+        if scenario not in ('reload', 'legacy9'):
             raise ValueError('A saved QA fixture may only seed the reload scenario')
         previous = resolve_seed_run(PROJECT, seed_qa_run)
         if not (previous / 'launch.json').is_file():
@@ -190,8 +190,8 @@ if __name__ == '__main__':
     parser.add_argument('--extra-mod', type=Path, action='append', default=[],
                         help='Reviewed code/art only: DragonFantasyCity or TenYearsOneHand; never copies config.lua')
     parser.add_argument('--run-name', default=datetime.now().strftime('%Y%m%d-%H%M%S-') + uuid.uuid4().hex[:6])
-    parser.add_argument('--scenario', choices=['smoke', 'cycle', 'combo', 'preset1', 'preset9', 'reload'], default='smoke')
-    parser.add_argument('--seed-qa-run', help='Reload a recorded synthetic QA id; v0.4-dev:<id> or v0.5-dev:<id> permits authorized previous-version fixtures')
+    parser.add_argument('--scenario', choices=['smoke', 'cycle', 'combo', 'preset1', 'preset9', 'reload', 'legacy9'], default='smoke')
+    parser.add_argument('--seed-qa-run', help='Reload a recorded synthetic QA id; v0.4-dev:<id>, v0.5-dev:<id> or v0.6-dev:<id> permits authorized previous-version fixtures')
     parser.add_argument('--timeout', type=int, default=240)
     args = parser.parse_args()
     run_probe(args.game.resolve(), args.smods.resolve(), args.mod.resolve(), args.run_name, args.scenario,
